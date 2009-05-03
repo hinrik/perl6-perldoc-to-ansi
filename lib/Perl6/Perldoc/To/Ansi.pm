@@ -675,9 +675,9 @@ Perl6::Perldoc::To::Ansi - ANSI-colored text renderer for Perl6::Perldoc
 
 =head1 DESCRIPTION
 
-This module is almost identical to Text renderer, except that many constructs
-are highlighted with ANSI terminal codes. See L<Perl6::Perldoc::To::Text> for
-more information.
+This module is almost identical to the Text renderer, except that many
+constructs are highlighted with ANSI terminal codes. See
+L<Perl6::Perldoc::To::Text> for more information.
 
 =head1 AUTHOR
 
@@ -686,6 +686,7 @@ Hinrik Örn Sigurðsson, L<hinrik.sig@gmail.com>
 =head1 LICENCE AND COPYRIGHT
 
 Copyright (c) 2006, Damian Conway L<DCONWAY@cpan.org>. All rights reserved.
+
 Copyright (c) 2009, Hinrik Örn Sigurðsson L<hinrik.sig@gmail.com>. All rights reserved.
 
 This module is free software; you can redistribute it and/or
