@@ -611,7 +611,7 @@ package Perl6::Perldoc::FormattingCode::R;
 
 sub to_text {
     my $self = shift;
-    return '[' .  $self->SUPER::to_text(@_) . ']';
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_text(@_), '33');
 }
 
 # Space-preserving formatter...

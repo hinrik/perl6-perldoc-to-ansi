@@ -1,5 +1,6 @@
 0.02
     - Ship a README file generated from the Pod source
+    - Use a color for R<> (same as I<>)
 
 0.01 Sun May  3 17:48:11 GMT 2009
     - Initial release
