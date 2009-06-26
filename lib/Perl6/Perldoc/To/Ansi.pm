@@ -3,9 +3,9 @@ package Perl6::Perldoc::To::Ansi;
 use warnings;
 use strict;
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
-no warnings 'redeclare';
+no warnings 'redefine';
 
 # add fake opening/closing tags, to be processed later
 sub add_ansi {
