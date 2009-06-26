@@ -3,7 +3,7 @@ package Perl6::Perldoc::To::Ansi;
 use warnings;
 use strict;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 no warnings 'redeclare';
 

@@ -1,4 +1,4 @@
-0.03
+0.03 Fri Jun 26 04:49:56 GMT 2009
     - Silence redefinition warnings in case someone loads this formatter
       after having loaded another one
 
