@@ -5,6 +5,8 @@ use strict;
 
 our $VERSION = '0.02';
 
+no warnings 'redeclare';
+
 # add fake opening/closing tags, to be processed later
 sub add_ansi {
     my ($text, $new) = @_;
