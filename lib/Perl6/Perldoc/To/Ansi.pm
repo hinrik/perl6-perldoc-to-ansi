@@ -5,8 +5,6 @@ use strict;
 
 our $VERSION = '0.04';
 
-no warnings 'redefine';
-
 # add fake opening/closing tags, to be processed later
 sub add_ansi {
     my ($text, $new) = @_;
@@ -63,12 +61,12 @@ sub rewrite_ansi {
 
 package Perl6::Perldoc::Parser::ReturnVal;
 
-sub to_text {
+sub to_ansi {
     my ($self, $internal_state) = @_;
 
     $internal_state ||= {};
 
-    my $text_rep = $self->{tree}->to_text($internal_state);
+    my $text_rep = $self->{tree}->to_ansi($internal_state);
 
     if (($internal_state->{note_count}||0) > 0) {
         $text_rep .= "\nNotes\n\n$internal_state->{notes}";
@@ -81,7 +79,7 @@ package Perl6::Perldoc::Root;
 
 my $INDENT = 4;
 
-sub add_text_nesting {
+sub add_ansi_nesting {
     my ($self, $text, $depth) = @_;
 
     # Nest according to the specified nestedness of the block...
@@ -99,13 +97,13 @@ sub add_text_nesting {
     return $text;
 }
 
-sub _list_to_text {
+sub _list_to_ansi {
     my ($list_ref, $state_ref) = @_;
     my $text = q{};
     for my $content ( @{$list_ref} ) {
         next if ! defined $content;
         if (ref $content) {
-            $text .= $content->to_text($state_ref);
+            $text .= $content->to_ansi($state_ref);
         }
         else {
             $text .= $content;
@@ -116,9 +114,9 @@ sub _list_to_text {
     return $text;
 }
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return $self->add_text_nesting(_list_to_text([$self->content], @_),0);
+    return $self->add_ansi_nesting(_list_to_ansi([$self->content], @_),0);
 }
 
 # Representation of file itself...
@@ -128,7 +126,7 @@ package Perl6::Perldoc::Document;
 # Ambient text around the Pod...
 package Perl6::Perldoc::Ambient;  
 
-sub to_text {
+sub to_ansi {
     return q{};
 }
 
@@ -141,15 +139,15 @@ package Perl6::Perldoc::Block::pod;
 # Standard =para block (may be implicit)...
 package Perl6::Perldoc::Block::para;   
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return "\n" . $self->SUPER::to_text(@_);
+    return "\n" . $self->SUPER::to_ansi(@_);
 }
 
 # Standard =code block (may be implicit)...
 package Perl6::Perldoc::Block::code;   
 
-sub min {
+sub ansi_min {
     my $min = shift;
     for my $next (@_) {
         $min = $next if $next < $min;
@@ -157,58 +155,58 @@ sub min {
     return $min;
 }
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    my $text = Perl6::Perldoc::Root::_list_to_text([$self->content],@_);
-    my $left_space = min map { length } $text =~ m{^ [^\S\n]* (?= \S) }gxms;
+    my $text = Perl6::Perldoc::Root::_list_to_ansi([$self->content],@_);
+    my $left_space = ansi_min map { length } $text =~ m{^ [^\S\n]* (?= \S) }gxms;
     $text =~ s{^ [^\S\n]{$left_space} }{}gxms;
     $text = Perl6::Perldoc::To::Ansi::add_ansi($text, '36');
-    return "\n" . $self->add_text_nesting($text, $INDENT);
+    return "\n" . $self->add_ansi_nesting($text, $INDENT);
 }
 
 
 # Standard =input block
 package Perl6::Perldoc::Block::input;   
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    my $text = Perl6::Perldoc::Root::_list_to_text([$self->content],@_);
-    return "\n" . $self->add_text_nesting($text, $INDENT);
+    my $text = Perl6::Perldoc::Root::_list_to_ansi([$self->content],@_);
+    return "\n" . $self->add_ansi_nesting($text, $INDENT);
 }
 
 
 # Standard =output block
 package Perl6::Perldoc::Block::output;   
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    my $text = Perl6::Perldoc::Root::_list_to_text([$self->content],@_);
-    return "\n" . $self->add_text_nesting($text, $INDENT);
+    my $text = Perl6::Perldoc::Root::_list_to_ansi([$self->content],@_);
+    return "\n" . $self->add_ansi_nesting($text, $INDENT);
 }
 
 # Standard =config block...
 package Perl6::Perldoc::Config; 
 
-sub to_text {
+sub to_ansi {
     return q{};
 }
 
 # Standard =table block...
 package Perl6::Perldoc::Block::table; 
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
     my ($text) = $self->content;
-    return "\n" . $self->add_text_nesting($text, $INDENT);
+    return "\n" . $self->add_ansi_nesting($text, $INDENT);
 }
 
 
 # Standard =head1 block...
 package Perl6::Perldoc::Block::head1;  
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    my $title = $self->SUPER::to_text(@_);
+    my $title = $self->SUPER::to_ansi(@_);
     $title =~ s{\A\s+|\s+\Z}{}gxms;
     $title =~ s{\s+}{ }gxms;
     my $number = $self->number;
@@ -221,9 +219,9 @@ sub to_text {
 # Standard =head2 block...
 package Perl6::Perldoc::Block::head2;  
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    my $title = $self->SUPER::to_text(@_);
+    my $title = $self->SUPER::to_ansi(@_);
     $title =~ s{\A\s+|\s+\Z}{}gxms;
     $title =~ s{\s+}{ }gxms;
     my $number = $self->number;
@@ -236,9 +234,9 @@ sub to_text {
 # Standard =head3 block...
 package Perl6::Perldoc::Block::head3;  
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    my $title = $self->SUPER::to_text(@_);
+    my $title = $self->SUPER::to_ansi(@_);
     $title =~ s{\A\s+|\s+\Z}{}gxms;
     $title =~ s{\s+}{ }gxms;
     my $number = $self->number;
@@ -251,9 +249,9 @@ sub to_text {
 # Standard =head4 block...
 package Perl6::Perldoc::Block::head4;  
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    my $title = $self->SUPER::to_text(@_);
+    my $title = $self->SUPER::to_ansi(@_);
     $title =~ s{\A\s+|\s+\Z}{}gxms;
     $title =~ s{\s+}{ }gxms;
     my $number = $self->number;
@@ -267,34 +265,34 @@ sub to_text {
 package Perl6::Perldoc::Block::list;   
     use base 'Perl6::Perldoc::Root';
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return "\n" . $self->add_text_nesting($self->SUPER::to_text(@_));
+    return "\n" . $self->add_ansi_nesting($self->SUPER::to_ansi(@_));
 }
 
 
 # Standard =item block...
 package Perl6::Perldoc::Block::item;   
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
 
     my $counter = $self->number;
     $counter = $counter ? qq{$counter.} : q{*};
 
-    my $body = $self->SUPER::to_text(@_);
+    my $body = $self->SUPER::to_ansi(@_);
 
     if (my $term = $self->term()) {
-        $term = $self->term( {as_objects=>1} )->to_text(@_);
+        $term = $self->term( {as_objects=>1} )->to_ansi(@_);
         if (length $counter) {
             $term =~ s{\A (\s* <[^>]+>)}{$1$counter. }xms;
         }
-        my $body = $self->add_text_nesting($body);
+        my $body = $self->add_ansi_nesting($body);
         $body =~ s{\A \n+}{}xms;
         return "\n$term\n$body";
     }
 
-    $body = $self->add_text_nesting($body, 1 + length $counter);
+    $body = $self->add_ansi_nesting($body, 1 + length $counter);
     $body =~ s{\A \n+}{}xms;
     $counter = Perl6::Perldoc::To::Ansi::add_ansi($counter, '31');
     $body =~ s{\A \s*}{$counter }xms;
@@ -306,26 +304,26 @@ sub to_text {
 package Perl6::Perldoc::Block::toclist;   
     use base 'Perl6::Perldoc::Root';
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
     
     # Convert list items to text, and return in an text list...
-    my $text = join q{}, map {$_->to_text(@_)}  $self->content;
+    my $text = join q{}, map {$_->to_ansi(@_)}  $self->content;
 
-    return $self->add_text_nesting($text);
+    return $self->add_ansi_nesting($text);
 }
 
 
 # Standard =tocitem block...
 package Perl6::Perldoc::Block::tocitem;   
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
 
     my @title = $self->title;
     return "" if ! @title;
     
-    my $title = Perl6::Perldoc::Root::_list_to_text(\@title, @_);
+    my $title = Perl6::Perldoc::Root::_list_to_ansi(\@title, @_);
 
     return "* $title\n";
 }
@@ -354,15 +352,15 @@ for my $depth (1..100) {
 # Standard =nested block...
 package Perl6::Perldoc::Block::nested;   
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return "\n" . $self->add_text_nesting($self->SUPER::to_text(@_));
+    return "\n" . $self->add_ansi_nesting($self->SUPER::to_ansi(@_));
 }
 
 # Standard =comment block...
 package Perl6::Perldoc::Block::comment;   
 
-sub to_text {
+sub to_ansi {
     return q{};
 }
 
@@ -402,22 +400,22 @@ BEGIN {
     );
 
     # Reuse content-to-text converter
-    *_list_to_text = *Perl6::Perldoc::Root::_list_to_text;
+    *_list_to_ansi = *Perl6::Perldoc::Root::_list_to_ansi;
 
     for my $blockname (@semantic_blocks) {
         no strict qw< refs >;
 
-        *{ "Perl6::Perldoc::Block::${blockname}::to_text" }
+        *{ "Perl6::Perldoc::Block::${blockname}::to_ansi" }
             = sub {
                 my $self = shift;
 
                 my @title = $self->title();
 
                 return "" if !@title;
-                my $title = _list_to_text(\@title, @_);
+                my $title = _list_to_ansi(\@title, @_);
 
                 return "\n" . Perl6::Perldoc::To::Ansi::add_ansi($title, '4;32') ."\n\n"
-                     . _list_to_text([$self->content], @_);
+                     . _list_to_ansi([$self->content], @_);
             };
     }
 }
@@ -432,25 +430,25 @@ package Perl6::Perldoc::FormattingCode::Named;
 # Basis formatter...
 package Perl6::Perldoc::FormattingCode::B;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_text(@_), '1');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '1');
 }
 
 # Code formatter...
 package Perl6::Perldoc::FormattingCode::C;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_text(@_), '36');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '36');
 }
 
 # Definition formatter...
 package Perl6::Perldoc::FormattingCode::D;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_text(@_), '34');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '34');
 }
 
 
@@ -473,7 +471,7 @@ my %is_translatable = (
 );
 
 # Convert E<> contents to text named or numeric entity...
-sub _to_text_entity {
+sub _to_ansi_entity {
     my ($spec) = @_;
     # Is it a line break?
     if (my $BR_count = $is_break_entity{$spec}) {
@@ -499,26 +497,26 @@ sub _to_text_entity {
     }
 }
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
     my $entities = $self->content;
-    return join q{}, map {_to_text_entity($_)} split /\s*;\s*/, $entities;
+    return join q{}, map {_to_ansi_entity($_)} split /\s*;\s*/, $entities;
 }
 
 # Important formatter...
 package Perl6::Perldoc::FormattingCode::I;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_text(@_), '33');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '33');
 }
 
 # Keyboard input formatter...
 package Perl6::Perldoc::FormattingCode::K;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_text(@_), '36');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '36');
 }
 
 # Link formatter...
@@ -527,10 +525,10 @@ package Perl6::Perldoc::FormattingCode::L;
 my $PERLDOC_ORG = 'http://perldoc.perl.org/';
 my $SEARCH      = 'http://www.google.com/search?q=';
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
     my $target = Perl6::Perldoc::To::Ansi::add_ansi($self->target(), '35');
-    my $text = $self->has_distinct_text ? $self->SUPER::to_text(@_) : undef;
+    my $text = $self->has_distinct_text ? $self->SUPER::to_ansi(@_) : undef;
 
     # Link within this document...
     if ($target =~ s{\A (?:doc:\s*)? [#] }{}xms ) {
@@ -568,18 +566,18 @@ package Perl6::Perldoc::FormattingCode::M;
 # Note formatter...
 package Perl6::Perldoc::FormattingCode::N;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
     my $count = ++$_[0]{note_count};
     my $marker = "[$count]";
-    $_[0]{notes} .= qq{$marker } . $self->SUPER::to_text(@_) . "\n";
+    $_[0]{notes} .= qq{$marker } . $self->SUPER::to_ansi(@_) . "\n";
     return qq{$marker};
 }
 
 # Placement link formatter...
 package Perl6::Perldoc::FormattingCode::P;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
     my $target = $self->target();
 
@@ -600,7 +598,7 @@ sub to_text {
 
     # TOC insertion...
     if ($target =~ s{\A toc: }{}xms) {
-        return Perl6::Perldoc::Root::_list_to_text([$self->content],@_);
+        return Perl6::Perldoc::Root::_list_to_ansi([$self->content],@_);
     }
 
     # Anything else...
@@ -611,34 +609,34 @@ sub to_text {
 # Replacable item formatter...
 package Perl6::Perldoc::FormattingCode::R;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_text(@_), '33');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '33');
 }
 
 # Space-preserving formatter...
 package Perl6::Perldoc::FormattingCode::S;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return $self->SUPER::to_text(@_);
+    return $self->SUPER::to_ansi(@_);
 }
 
 
 # Terminal output formatter...
 package Perl6::Perldoc::FormattingCode::T;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_text(@_), '36');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '36');
 }
 
 # Unusual formatter...
 package Perl6::Perldoc::FormattingCode::U;
 
-sub to_text {
+sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_text(@_), '4;37');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '4;37');
 }
 
 # Verbatim formatter...
@@ -650,7 +648,7 @@ package Perl6::Perldoc::FormattingCode::X;
 # Zero-width formatter...
 package Perl6::Perldoc::FormattingCode::Z;
 
-sub to_text {
+sub to_ansi {
     return q{};
 }
 
@@ -673,7 +671,7 @@ Perl6::Perldoc::To::Ansi - ANSI-colored text renderer for Perl6::Perldoc
     use Perl6::Perldoc::Parser;
     use Perl6::Perldoc::To::Ansi;
 
-    # All Perl6::Perldoc::Parser DOM classes now have a to_text() method
+    # All Perl6::Perldoc::Parser DOM classes now have a to_ansi() method
 
 =head1 DESCRIPTION
 
