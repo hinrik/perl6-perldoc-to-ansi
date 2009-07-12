@@ -1,4 +1,4 @@
-0.06
+0.06 Sat Jul 11 21:26:06 EDT 2009
     - Changed the colorscheme a bit, toned it down
     - Added a 01_compile.t
     - Added no_index directives for 3rd party packages in Makefile.PL
