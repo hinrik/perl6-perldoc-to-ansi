@@ -1,6 +1,7 @@
 0.06
     - Changed the colorscheme a bit, toned it down
     - Added a 01_compile.t
+    - Added no_index directives for 3rd party packages in Makefile.PL
 
 0.05 Wed Jul  1 11:15:57 GMT 2009
     - Rename methods instead of redefining ones from ::To::Text
