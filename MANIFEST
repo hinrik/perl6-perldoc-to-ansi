@@ -1,4 +1,5 @@
 lib/Perl6/Perldoc/To/Ansi.pm
+t/01_compile.t
 Makefile.PL
 Changes
 README
