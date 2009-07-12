@@ -5,7 +5,7 @@ SYNOPSIS
         use Perl6::Perldoc::Parser;
         use Perl6::Perldoc::To::Ansi;
 
-        # All Perl6::Perldoc::Parser DOM classes now have a to_text() method
+        # All Perl6::Perldoc::Parser DOM classes now have a to_ansi() method
 
 DESCRIPTION
     This module is almost identical to the Text renderer, except that many

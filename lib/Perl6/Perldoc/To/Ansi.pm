@@ -160,7 +160,7 @@ sub to_ansi {
     my $text = Perl6::Perldoc::Root::_list_to_ansi([$self->content],@_);
     my $left_space = ansi_min map { length } $text =~ m{^ [^\S\n]* (?= \S) }gxms;
     $text =~ s{^ [^\S\n]{$left_space} }{}gxms;
-    $text = Perl6::Perldoc::To::Ansi::add_ansi($text, '36');
+    $text = Perl6::Perldoc::To::Ansi::add_ansi($text, '33');
     return "\n" . $self->add_ansi_nesting($text, $INDENT);
 }
 
@@ -213,7 +213,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi($title, '4;32') ."\n";
+    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi(uc $title, '1') ."\n";
 }
 
 # Standard =head2 block...
@@ -228,7 +228,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi($title, '32') ."\n";
+    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi($title, '1') ."\n";
 }
 
 # Standard =head3 block...
@@ -243,7 +243,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi($title, '32') ."\n";
+    return "\n\n$title\n";
 }
 
 # Standard =head4 block...
@@ -258,7 +258,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi($title, '32') ."\n";
+    return "\n\n$title\n";
 }
 
 # Implicit list block...
@@ -294,10 +294,9 @@ sub to_ansi {
 
     $body = $self->add_ansi_nesting($body, 1 + length $counter);
     $body =~ s{\A \n+}{}xms;
-    $counter = Perl6::Perldoc::To::Ansi::add_ansi($counter, '31');
     $body =~ s{\A \s*}{$counter }xms;
 
-    return "$body";
+    return $body;
 }
 
 # Implicit toclist block...
@@ -414,7 +413,7 @@ BEGIN {
                 return "" if !@title;
                 my $title = _list_to_ansi(\@title, @_);
 
-                return "\n" . Perl6::Perldoc::To::Ansi::add_ansi($title, '4;32') ."\n\n"
+                return "\n" . Perl6::Perldoc::To::Ansi::add_ansi(uc $title, '1') ."\n\n"
                      . _list_to_ansi([$self->content], @_);
             };
     }
@@ -440,7 +439,7 @@ package Perl6::Perldoc::FormattingCode::C;
 
 sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '36');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '33');
 }
 
 # Definition formatter...
@@ -448,7 +447,7 @@ package Perl6::Perldoc::FormattingCode::D;
 
 sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '34');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '1');
 }
 
 
@@ -508,7 +507,7 @@ package Perl6::Perldoc::FormattingCode::I;
 
 sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '33');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '32');
 }
 
 # Keyboard input formatter...
@@ -527,7 +526,7 @@ my $SEARCH      = 'http://www.google.com/search?q=';
 
 sub to_ansi {
     my $self = shift;
-    my $target = Perl6::Perldoc::To::Ansi::add_ansi($self->target(), '35');
+    my $target = Perl6::Perldoc::To::Ansi::add_ansi($self->target(), '34');
     my $text = $self->has_distinct_text ? $self->SUPER::to_ansi(@_) : undef;
 
     # Link within this document...
@@ -611,7 +610,7 @@ package Perl6::Perldoc::FormattingCode::R;
 
 sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '33');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '32');
 }
 
 # Space-preserving formatter...
@@ -636,7 +635,7 @@ package Perl6::Perldoc::FormattingCode::U;
 
 sub to_ansi {
     my $self = shift;
-    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '4;37');
+    return Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '4');
 }
 
 # Verbatim formatter...
