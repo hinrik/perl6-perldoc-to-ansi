@@ -9,7 +9,7 @@ my @packages = qw<
     Perl6::Perldoc::Config
     Perl6::Perldoc::Document
     Perl6::Perldoc::FormattingCode
-    Perl6::Perldoc::ParserReturnVal
+    Perl6::Perldoc::Parser::ReturnVal
     Perl6::Perldoc::Root
 >;
 push @packages, map { "Perl6::Perldoc::Block::$_" } qw<
