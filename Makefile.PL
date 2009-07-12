@@ -26,6 +26,7 @@ abstract_from ('lib/Perl6/Perldoc/To/Ansi.pm');
 version_from  ('lib/Perl6/Perldoc/To/Ansi.pm');
 license       ('artistic');
 requires      ('Perl6::Perldoc' => '0.0.5');
+test_requires ('Test::More'     => '0');
 tests_recursive();
 no_index      (package => $_) for @packages;
 WriteAll();
