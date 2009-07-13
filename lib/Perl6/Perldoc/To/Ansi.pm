@@ -11,6 +11,13 @@ sub add_ansi {
     return "\e[OPEN${new}m" . $text . "\e[CLOSE${new}m";
 }
 
+# same, but only if the entire text is not already colored
+sub add_ansi_only {
+    my ($text, $new) = @_;
+    return $text if $text =~ /^\e\[/ && $text =~ /\e\[0?m$/;
+    return add_ansi($text, $new);
+}
+
 sub rewrite_ansi {
     my ($text) = @_;
     #$text = "\e[${new}m$text";
@@ -213,7 +220,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi($title, '1') ."\n";
+    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
 }
 
 # Standard =head2 block...
@@ -228,7 +235,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi($title, '1') ."\n";
+    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
 }
 
 # Standard =head3 block...
@@ -243,7 +250,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n$title\n";
+    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
 }
 
 # Standard =head4 block...
@@ -258,7 +265,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n$title\n";
+    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
 }
 
 # Implicit list block...
