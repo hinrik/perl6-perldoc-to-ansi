@@ -3,7 +3,7 @@ package Perl6::Perldoc::To::Ansi;
 use warnings;
 use strict;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 # add fake opening/closing tags, to be processed later
 sub add_ansi {
