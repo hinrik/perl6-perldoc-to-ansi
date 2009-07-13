@@ -533,35 +533,43 @@ my $SEARCH      = 'http://www.google.com/search?q=';
 
 sub to_ansi {
     my $self = shift;
-    my $target = Perl6::Perldoc::To::Ansi::add_ansi($self->target(), '34');
+    my $target = $self->target();
     my $text = $self->has_distinct_text ? $self->SUPER::to_ansi(@_) : undef;
-
+    my $add_color = sub {
+        $target = Perl6::Perldoc::To::Ansi::add_ansi($target, '34');
+    };
+    
     # Link within this document...
     if ($target =~ s{\A (?:doc:\s*)? [#] }{}xms ) {
-        return defined $text ? qq{$text (see the "$target" section)}
-                             : qq{the "$target" section}
+        $add_color->();
+        return defined $text ? qq{$text (see the $target section)}
+                             : qq{the $target section}
     }
 
     # Link to other documentation...
     if ($target =~ s{\A doc: }{}xms) {
+        $add_color->();
         return defined $text ? qq{$text (see the documentation for $target)} 
                              : qq{the documentation for $target}
     }
 
     # Link to manpage...
     if ($target =~ s{\A man: }{}xms) {
+        $add_color->();
         return defined $text ? qq{$text (see the $target manpage)}
                              : qq{the $target manpage}
     }
 
     # Link back to definition in this document...
     if ($target =~ s{\A (?:defn) : }{}xms) {
-        return defined $text ? qq{$text (see the definition of "$target")}
+        $add_color->();
+        return defined $text ? qq{$text (see the definition of $target)}
                              : $target
     }
 
     # Anything else...
-    return defined $text ? qq{$text <$target>}
+    $add_color->();
+    return defined $text ? qq{$text $target}
                          : $target;
 }
 
