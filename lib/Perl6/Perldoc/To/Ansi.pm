@@ -213,7 +213,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi(uc $title, '1') ."\n";
+    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi($title, '1') ."\n";
 }
 
 # Standard =head2 block...
