@@ -567,6 +567,13 @@ sub to_ansi {
                              : $target
     }
 
+    # Link to an email address
+    if ($target =~ s{\A (?:mailto) : }{}xms) {
+        $add_color->();
+        return defined $text ? qq{$text ($target)}
+                             : $target
+    }
+
     # Anything else...
     $add_color->();
     return defined $text ? qq{$text $target}
