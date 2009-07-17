@@ -1,4 +1,4 @@
-0.08
+0.08 Fri Jul 17 10:52:04 GMT 2009
     - Only add one newline before =head, like Pod 5 renderers usually do
     - Format email links nicely
 
