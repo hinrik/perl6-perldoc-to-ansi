@@ -1,3 +1,6 @@
+0.08
+    - Only add one newline before =head, like Pod 5 renderers usually do
+
 0.07 Mon Jul 13 17:13:29 EDT 2009
     - Make =head1 to =head4 headings bold when appropriate
     - Fix problem with L<> links not being translated

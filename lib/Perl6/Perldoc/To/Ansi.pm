@@ -220,7 +220,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
+    return "\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
 }
 
 # Standard =head2 block...
@@ -235,7 +235,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
+    return "\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
 }
 
 # Standard =head3 block...
@@ -250,7 +250,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
+    return "\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
 }
 
 # Standard =head4 block...
@@ -265,7 +265,7 @@ sub to_ansi {
     if (defined $number) {
         $title = "$number. $title";
     }
-    return "\n\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
+    return "\n" . Perl6::Perldoc::To::Ansi::add_ansi_only($title, '1') ."\n";
 }
 
 # Implicit list block...
