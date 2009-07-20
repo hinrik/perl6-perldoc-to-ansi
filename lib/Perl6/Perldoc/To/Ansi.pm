@@ -178,6 +178,7 @@ package Perl6::Perldoc::Block::input;
 sub to_ansi {
     my $self = shift;
     my $text = Perl6::Perldoc::Root::_list_to_ansi([$self->content],@_);
+    $text = Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '36');
     return "\n" . $self->add_ansi_nesting($text, $INDENT);
 }
 
@@ -188,6 +189,7 @@ package Perl6::Perldoc::Block::output;
 sub to_ansi {
     my $self = shift;
     my $text = Perl6::Perldoc::Root::_list_to_ansi([$self->content],@_);
+    $text = Perl6::Perldoc::To::Ansi::add_ansi($self->SUPER::to_ansi(@_), '36');
     return "\n" . $self->add_ansi_nesting($text, $INDENT);
 }
 
