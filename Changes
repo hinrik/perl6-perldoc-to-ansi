@@ -1,3 +1,6 @@
+0.10
+    - Makes X<> codes non-printing like Z<>
+
 0.09 Mon Jul 20 16:22:59 GMT 2009
     - Add missing coloring to =input and =output blocks
 

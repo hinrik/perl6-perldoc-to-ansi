@@ -668,6 +668,10 @@ package Perl6::Perldoc::FormattingCode::V;
 # indeX formatter...
 package Perl6::Perldoc::FormattingCode::X;
 
+sub to_ansi {
+    return q{};
+}
+
 # Zero-width formatter...
 package Perl6::Perldoc::FormattingCode::Z;
 
