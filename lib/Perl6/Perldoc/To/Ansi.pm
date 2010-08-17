@@ -1,6 +1,6 @@
 package Perl6::Perldoc::To::Ansi;
 
-use warnings;
+use warnings FATAL => 'all';
 use strict;
 
 # add fake opening/closing tags, to be processed later
