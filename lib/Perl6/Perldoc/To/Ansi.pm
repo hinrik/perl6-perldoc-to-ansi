@@ -683,9 +683,8 @@ package Perl6::Perldoc::Block::table;
 
 
 1; # Magic true value required at end of module
-__END__
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 
